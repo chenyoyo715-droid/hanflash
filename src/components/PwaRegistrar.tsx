@@ -9,9 +9,12 @@ export function PwaRegistrar() {
       "serviceWorker" in navigator &&
       process.env.NODE_ENV === "production"
     ) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {
-        // Ignore registration failures in unsupported contexts
-      });
+      const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+      navigator.serviceWorker
+        .register(`${basePath}/sw.js`, { scope: `${basePath}/` })
+        .catch(() => {
+          // Ignore registration failures in unsupported contexts
+        });
     }
   }, []);
 

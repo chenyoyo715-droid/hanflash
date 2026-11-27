@@ -5,6 +5,8 @@
 
 # next.js
 /.next/
+/.next-pages/
+/.api-route-backup/
 /out/
 
 # production

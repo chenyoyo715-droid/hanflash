@@ -17,19 +17,21 @@ const notoSansKr = Noto_Sans_KR({
   display: "swap",
 });
 
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export const metadata: Metadata = {
   title: "HanFlash — 韓文 3 秒開刷",
   description:
     "極致低阻力的韓文背單字 PWA：打開 3 秒即開刷、生詞／模糊／熟詞三鍵分桶、漢字詞與連音標註、Gemini AI 一鍵製卡。",
-  manifest: "/manifest.json",
+  manifest: `${basePath}/manifest.json`,
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "HanFlash",
   },
   icons: {
-    icon: "/icon.svg",
-    apple: "/icon.svg",
+    icon: `${basePath}/icon.svg`,
+    apple: `${basePath}/icon.svg`,
   },
 };
 

@@ -1,5 +1,5 @@
-const CACHE_NAME = "hanflash-shell-v1";
-const APP_SHELL = ["/", "/manifest.json", "/icon.svg"];
+const CACHE_NAME = "hanflash-shell-v2";
+const APP_SHELL = ["./", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
@@ -30,12 +30,10 @@ self.addEventListener("fetch", (event) => {
   if (request.method !== "GET") return;
   const url = new URL(request.url);
 
-  // Never cache API calls or cross-origin requests
-  if (url.origin !== self.location.origin || url.pathname.startsWith("/api/")) {
+  if (url.origin !== self.location.origin || url.pathname.includes("/api/")) {
     return;
   }
 
-  // Network-first with cache fallback for smooth online updates & offline resilience
   event.respondWith(
     fetch(request)
       .then((response) => {

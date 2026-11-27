@@ -76,10 +76,12 @@
 
 ## 4. Git / GitHub 版本控制與協作規範
 
-### 4.1 遠端儲存庫資訊
-- **託管平台**：GitHub（Private 私人儲存庫）
+### 4.1 遠端儲存庫與線上部署資訊
+- **託管平台**：GitHub（Public 儲存庫，不含任何密鑰）
 - **擁有者帳號**：`chenyoyo715-droid`
 - **遠端位址 (Remote `origin`)**：`https://github.com/chenyoyo715-droid/hanflash`
+- **線上部署網址 (GitHub Pages)**：`https://chenyoyo715-droid.github.io/hanflash/`
+- **靜態部署機制**：透過 `npm run build:pages`（`scripts/build-pages.mjs`）產出 `out/`（含 `.nojekyll`）並發佈至 `gh-pages` 分支；GitHub Pages 靜態版支援瀏覽器端 BYOK 填入個人 Gemini API Key
 - **預設主分支**：`main`（保持隨時可建置、可部署狀態）
 
 ### 4.2 分支管理策略

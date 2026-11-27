@@ -1,5 +1,6 @@
 # HanFlash — 韓文 3 秒開刷 (PWA)
 
+> **線上試用（GitHub Pages）**：https://chenyoyo715-droid.github.io/hanflash/  
 > 完整產品與技術規格、資料庫設計與 GitHub 版本控制規範請見 [`SPEC.md`](./SPEC.md)。  
 > GitHub 儲存庫：https://github.com/chenyoyo715-droid/hanflash
 

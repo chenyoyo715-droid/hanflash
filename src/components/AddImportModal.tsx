@@ -1,16 +1,23 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   FileSpreadsheet,
+  KeyRound,
   Loader2,
   Plus,
   Sparkles,
   Upload,
   X,
 } from "lucide-react";
+import {
+  getSavedBrowserGeminiKey,
+  isStaticExportMode,
+  requestAiEnrich,
+  saveBrowserGeminiKey,
+} from "@/lib/aiEnrichClient";
 import { parseBatchInput, type CardDraft } from "@/lib/csvParser";
-import type { Deck, EnrichedKoreanWord, VocabCard } from "@/types/vocab";
+import type { Deck, VocabCard } from "@/types/vocab";
 
 interface AddImportModalProps {
   decks: Deck[];
@@ -58,10 +65,17 @@ export function AddImportModal({
   const [batchRaw, setBatchRaw] = useState("");
   const [enrichedBatch, setEnrichedBatch] = useState<CardDraft[]>([]);
 
+  const [browserGeminiKey, setBrowserGeminiKey] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isStaticExportMode) {
+      setBrowserGeminiKey(getSavedBrowserGeminiKey());
+    }
+  }, []);
 
   const parsedBatch = useMemo(() => parseBatchInput(batchRaw), [batchRaw]);
 
@@ -74,20 +88,11 @@ export function AddImportModal({
     return created.id;
   };
 
-  const callAiEnrich = async (words: string[]): Promise<EnrichedKoreanWord[]> => {
-    const res = await fetch("/api/ai/enrich", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ words }),
-    });
-    const data = (await res.json()) as {
-      items?: EnrichedKoreanWord[];
-      error?: string;
-    };
-    if (!res.ok || !data.items) {
-      throw new Error(data.error || "AI 補全失敗");
+  const callAiEnrich = async (words: string[]) => {
+    if (isStaticExportMode && browserGeminiKey.trim()) {
+      saveBrowserGeminiKey(browserGeminiKey);
     }
-    return data.items;
+    return requestAiEnrich(words, browserGeminiKey);
   };
 
   const handleSingleAiEnrich = async () => {
@@ -306,6 +311,24 @@ export function AddImportModal({
 
         {/* Body */}
         <div className="flex-1 overflow-y-auto p-5">
+          {isStaticExportMode && (
+            <div className="mb-4 rounded-2xl border border-indigo-100 bg-indigo-50/60 p-3 dark:border-indigo-900/60 dark:bg-indigo-950/30">
+              <label className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold text-indigo-800 dark:text-indigo-300">
+                <KeyRound className="h-3.5 w-3.5" />
+                Gemini API Key（選填，僅存於此瀏覽器，用於 GitHub Pages 版 AI 補全）
+              </label>
+              <input
+                type="password"
+                value={browserGeminiKey}
+                onChange={(e) => {
+                  setBrowserGeminiKey(e.target.value);
+                  saveBrowserGeminiKey(e.target.value);
+                }}
+                placeholder="AIza...（不填也能手動新增與 CSV 匯入）"
+                className="w-full rounded-xl border border-indigo-200 bg-white px-3 py-1.5 text-xs outline-none focus:border-indigo-500 dark:border-indigo-800 dark:bg-slate-950 dark:text-white"
+              />
+            </div>
+          )}
           {error && (
             <div className="mb-4 rounded-xl border border-rose-200 bg-rose-50 px-3.5 py-2.5 text-xs text-rose-700 dark:border-rose-900 dark:bg-rose-950/60 dark:text-rose-300">
               {error}
