@@ -12,7 +12,6 @@ const nextConfig: NextConfig = {
   ...(isGithubPages
     ? {
         output: "export",
-        distDir: ".next-pages",
         basePath,
         assetPrefix: `${basePath}/`,
         trailingSlash: true,
